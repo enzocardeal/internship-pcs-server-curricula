@@ -1,0 +1,33 @@
+scalar Date
+
+type Curriculum{
+    id: ID!
+    name: String!
+    lastName: String!
+    degreeCourse: String!
+    graduationYear: Date!
+}
+
+input Experience{
+    company: String!
+    role: String!
+    description: String!
+    startedAt: Date!
+    endedAt: Date!
+}
+
+input Activity{
+    name: String!
+    description: String!
+    completedAt: Date!
+    expiresAt: Date!
+}
+
+input CreateCurriculumInput{
+    name: String!
+    lastName: String!
+    degreeCourse: String!
+    graduationYear: Date!
+    pastExperiences: [Experience]!
+    certificates: [Activity]!
+}
