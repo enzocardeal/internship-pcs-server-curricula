@@ -1,6 +1,6 @@
 # internship-pcs-server-curricula
 
-Microsservice for curricula of the project Internship 4.0 from Poli-USP.
+Microservice for curricula of the project Internship 4.0 from Poli-USP.
 
 ## Run Application
 
