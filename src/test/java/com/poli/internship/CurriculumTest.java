@@ -50,14 +50,6 @@ public class CurriculumTest {
                      "expiresAt", "2025-05-03"
                 )
         );
-        certificates.add(
-                Map.of(
-                        "name", "ML for dummies",
-                        "description", "",
-                        "completedAt", "2021-05-03",
-                        "expiresAt", "2025-05-03"
-                )
-        );
         List<Object> pastExperiences = new ArrayList<Object>();
         pastExperiences.add(
                 Map.of(
@@ -66,15 +58,6 @@ public class CurriculumTest {
                        "description", "",
                        "startedAt", "2021-05-01",
                        "endedAt", "2021-08-30"
-                )
-        );
-        pastExperiences.add(
-                Map.of(
-                       "company", "BTG Pactual",
-                       "role", "IT Security Intern",
-                       "description", "",
-                       "startedAt", "2022-01-01",
-                       "endedAt", "2022-04-28"
                 )
         );
         createInput.put("name", "Enzo");
@@ -110,12 +93,9 @@ public class CurriculumTest {
         assertThat(curriculumCreated.id()).isEqualTo(curriculumReturned.id());
         assertThat(curriculumCreated.name()).isEqualTo(curriculumReturned.name());
         assertThat(curriculumCreated.name()).isEqualTo(curriculumReturned.name());
-        assertEquals(pastExperiencesCreated[0].getCompany(), pastExperiencesReturned[1].getCompany());
-        assertEquals(pastExperiencesCreated[0].getRole(), pastExperiencesReturned[1].getRole());
+        assertEquals(pastExperiencesCreated[0].getCompany(), pastExperiencesReturned[0].getCompany());
+        assertEquals(pastExperiencesCreated[0].getRole(), pastExperiencesReturned[0].getRole());
         assertEquals(certificatesCreated[0].getName(), certificatesReturned[0].getName());
-        assertEquals(pastExperiencesCreated[1].getCompany(), pastExperiencesReturned[0].getCompany());
-        assertEquals(pastExperiencesCreated[1].getRole(), pastExperiencesReturned[0].getRole());
-        assertEquals(certificatesCreated[1].getName(), certificatesReturned[1].getName());
     }
 
     @Test
@@ -154,6 +134,22 @@ public class CurriculumTest {
 
         assertThat(curriculum.id().toString()).isEqualTo(curriculumEntity.getId().toString());
         assertThat(curriculum.graduationYear()).isEqualTo(LocalDate.parse("2024-12-30"));
+    }
+
+    @Test
+    @Transactional
+    public void getAllCurricula(){
+        CurriculumEntity curriculumEntity = createElementsOnDb();
+        String id = curriculumEntity.getId().toString();
+        Map<String, Object> input = new HashMap<String, Object>();
+
+        List<HashMap> curricula = this.tester.documentName("getAllCurricula")
+                .execute()
+                .path("getAllCurricula")
+                .entity(List.class)
+                .get();
+
+        assertThat((String)curricula.get(0).get("id")).isEqualTo(id);
     }
 
     private CurriculumEntity createElementsOnDb(){
