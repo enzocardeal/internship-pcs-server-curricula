@@ -5,7 +5,7 @@ services:
     image: postgres:14.6
     restart: always
     volumes:
-      - db-data
+      - /opt/db-data
     environment:
       - POSTGRES_DB=postgres
       - POSTGRES_USER=postgres
@@ -22,7 +22,7 @@ services:
     image: postgres:14.6
     restart: always
     volumes:
-      - db-test-data
+      - /opt/db-test-data
     environment:
       - POSTGRES_DB=postgres_test
       - POSTGRES_USER=postgres_test
@@ -33,7 +33,7 @@ services:
       - 5432
     networks:
       - app-network
-    profiles: ["default", "test"]
+    profiles: ["test"]
   app:
     container_name: app
     depends_on:
@@ -52,9 +52,6 @@ services:
       - app-network
     profiles: ["default"]
 
-volumes:
-  db-test-data:
-  db-data:
 
 networks:
   app-network:

@@ -1,0 +1,3 @@
+mutation deleteCurriculum($input: DeleteCurriculumInput!){
+    deleteCurriculum(input: $input)
+}

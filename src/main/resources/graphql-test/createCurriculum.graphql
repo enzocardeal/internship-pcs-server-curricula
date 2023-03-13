@@ -1,0 +1,22 @@
+mutation createCurriculum($input: CreateCurriculumInput!){
+    createCurriculum(input: $input){
+        id
+        name
+        lastName
+        degreeCourse
+        graduationYear
+        pastExperiences {
+            company
+            role
+            description
+            endedAt
+            startedAt
+        }
+        certificates {
+            name
+            description
+            completedAt
+            expiresAt
+        }
+    }
+}

@@ -1,8 +1,10 @@
 type Query {
-    getUser(input: GetUserInput): User
+    getCurriculumById(input: GetCurriculumByIdInput!): Curriculum
+    getAllCurricula: [Curriculum]!
 }
 
 type Mutation {
-    createUser(input: CreateUserInput): User
-    createCurriculum(input: CreateCurriculumInput): Curriculum
+    createCurriculum(input: CreateCurriculumInput!): Curriculum
+    deleteCurriculum(input: DeleteCurriculumInput!): Boolean
+    updateCurriculum(input: UpdateCurriculumInput!): Curriculum
 }

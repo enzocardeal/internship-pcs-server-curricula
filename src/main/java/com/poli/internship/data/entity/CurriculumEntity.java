@@ -29,6 +29,24 @@ public class CurriculumEntity {
 
     }
 
+    public CurriculumEntity(
+            Long id,
+            String name,
+            String lastName,
+            String degreeCourse,
+            LocalDate graduationYear,
+            Set<ExperienceEmbeddable> pastExperiences,
+            Set<ActivityEmbeddable> certificates
+    ) {
+        this.id = id;
+        this.name = name;
+        this.lastName = lastName;
+        this.degreeCourse = degreeCourse;
+        this.graduationYear = graduationYear;
+        this.pastExperiences = pastExperiences;
+        this.certificates = certificates;
+    }
+
     public CurriculumEntity(String name,
                             String lastName,
                             String degreeCourse,

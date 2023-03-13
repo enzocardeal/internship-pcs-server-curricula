@@ -6,9 +6,11 @@ type Curriculum{
     lastName: String!
     degreeCourse: String!
     graduationYear: Date!
+    pastExperiences: [Experience]!
+    certificates: [Activity]!
 }
 
-input Experience{
+type Experience{
     company: String!
     role: String!
     description: String!
@@ -16,7 +18,22 @@ input Experience{
     endedAt: Date!
 }
 
-input Activity{
+type Activity{
+    name: String!
+    description: String!
+    completedAt: Date!
+    expiresAt: Date!
+}
+
+input ExperienceInput{
+    company: String!
+    role: String!
+    description: String!
+    startedAt: Date!
+    endedAt: Date!
+}
+
+input ActivityInput{
     name: String!
     description: String!
     completedAt: Date!
@@ -28,6 +45,24 @@ input CreateCurriculumInput{
     lastName: String!
     degreeCourse: String!
     graduationYear: Date!
-    pastExperiences: [Experience]!
-    certificates: [Activity]!
+    pastExperiences: [ExperienceInput]!
+    certificates: [ActivityInput]!
+}
+
+input DeleteCurriculumInput{
+    id: String!
+}
+
+input UpdateCurriculumInput{
+    id: String!
+    name: String
+    lastName: String
+    degreeCourse: String
+    graduationYear: Date
+    pastExperiences: [ExperienceInput]
+    certificates: [ActivityInput]
+}
+
+input GetCurriculumByIdInput{
+    id: String!
 }
