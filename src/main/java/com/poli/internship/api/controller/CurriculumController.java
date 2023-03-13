@@ -63,8 +63,12 @@ public class CurriculumController {
         List<ExperienceEmbeddable> pastExperiences = new ArrayList<ExperienceEmbeddable>();
         List<ActivityEmbeddable> certificates = new ArrayList<ActivityEmbeddable>();
 
-        ((List)data.get("pastExperiences")).forEach((experience) -> pastExperiences.add(parseExperience((Map)experience)));
-        ((List)data.get("certificates")).forEach((certificate) -> certificates.add(parseActivity((Map)certificate)));
+        if(data.get("pastExperiences") != null){
+            ((List)data.get("pastExperiences")).forEach((experience) -> pastExperiences.add(parseExperience((Map)experience)));
+        }
+        if(data.get("certificates") != null){
+            ((List)data.get("certificates")).forEach((certificate) -> certificates.add(parseActivity((Map)certificate)));
+        }
 
         Curriculum positionToBeUpdated = this.getCurriculumByIdUseCase.exec((String)data.get("id"));
 

@@ -1,5 +1,6 @@
 package com.poli.internship;
 
+import com.poli.internship.data.datasource.CurriculumDataSource;
 import com.poli.internship.data.embeddable.ActivityEmbeddable;
 import com.poli.internship.data.embeddable.ExperienceEmbeddable;
 import com.poli.internship.data.entity.CurriculumEntity;
@@ -16,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 import static com.poli.internship.domain.models.CurriculumModel.Curriculum;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.time.LocalDate;
 import java.util.*;
@@ -37,54 +39,6 @@ public class CurriculumTest {
     @Test
     @Transactional
     public void createAndGetCurriculum(){
-//        Set<ExperienceEmbeddable> pastExperiences = new HashSet<ExperienceEmbeddable>();
-//        Set<ActivityEmbeddable> certificates = new HashSet<ActivityEmbeddable>();
-//        pastExperiences.add(
-//                new ExperienceEmbeddable(
-//                        "BTG Pactual",
-//                        "IT Finance Intern",
-//                        "",
-//                        LocalDate.parse("2021-05-01"),
-//                        LocalDate.parse("2021-08-30")
-//                )
-//        );
-//        pastExperiences.add(
-//                new ExperienceEmbeddable(
-//                        "BTG Pactual",
-//                        "IT Security Intern",
-//                        "",
-//                        LocalDate.parse("2022-01-01"),
-//                        LocalDate.parse("2022-04-28")
-//                )
-//        );
-//        certificates.add(
-//                new ActivityEmbeddable(
-//                       "ML for dummies",
-//                       "",
-//                       LocalDate.parse("2021-05-03"),
-//                       LocalDate.parse("2025-05-03")
-//                )
-//        );
-//        certificates.add(
-//                new ActivityEmbeddable(
-//                        "DS for dummies",
-//                        "",
-//                        LocalDate.parse("2021-05-03"),
-//                        LocalDate.parse("2025-05-03")
-//                )
-//        );
-//        CurriculumEntity curriculumEntity = this.repository.save(
-//                new CurriculumEntity(
-//                        "Enzo",
-//                        "Neves",
-//                        "Engenharia da Computação",
-//                        LocalDate.parse("2023-12-30"),
-//                        pastExperiences,
-//                        certificates
-//                )
-//        );
-//
-//        String id = curriculumEntity.getId().toString();
 
         Map<String, Object> createInput = new HashMap<String, Object>();
         List<Object> certificates = new ArrayList<Object>();
@@ -162,5 +116,94 @@ public class CurriculumTest {
         assertEquals(pastExperiencesCreated[1].getCompany(), pastExperiencesReturned[0].getCompany());
         assertEquals(pastExperiencesCreated[1].getRole(), pastExperiencesReturned[0].getRole());
         assertEquals(certificatesCreated[1].getName(), certificatesReturned[1].getName());
+    }
+
+    @Test
+    @Transactional
+    public void deleteCurriculum(){
+        String id = createElementsOnDb().getId().toString();
+
+        Map<String, Object> input = new HashMap<String, Object>();
+        input.put("id", id);
+
+        Boolean deleted = this.tester.documentName("deleteCurriculum")
+                .variable("input", input)
+                .execute()
+                .path("deleteCurriculum")
+                .entity(Boolean.class)
+                .get();
+
+        assertTrue(deleted);
+    }
+
+    @Test
+    @Transactional
+    public void updateCurriculum(){
+        CurriculumEntity curriculumEntity = createElementsOnDb();
+        String id = curriculumEntity.getId().toString();
+        Map<String, Object> input = new HashMap<String, Object>();
+        input.put("id", id);
+        input.put("graduationYear", LocalDate.parse("2024-12-30"));
+
+        Curriculum curriculum = this.tester.documentName("updateCurriculum")
+                .variable("input", input)
+                .execute()
+                .path("updateCurriculum")
+                .entity(Curriculum.class)
+                .get();
+
+        assertThat(curriculum.id().toString()).isEqualTo(curriculumEntity.getId().toString());
+        assertThat(curriculum.graduationYear()).isEqualTo(LocalDate.parse("2024-12-30"));
+    }
+
+    private CurriculumEntity createElementsOnDb(){
+        Set<ExperienceEmbeddable> pastExperiences = new HashSet<ExperienceEmbeddable>();
+        Set<ActivityEmbeddable> certificates = new HashSet<ActivityEmbeddable>();
+        pastExperiences.add(
+                new ExperienceEmbeddable(
+                        "BTG Pactual",
+                        "IT Finance Intern",
+                        "",
+                        LocalDate.parse("2021-05-01"),
+                        LocalDate.parse("2021-08-30")
+                )
+        );
+        pastExperiences.add(
+                new ExperienceEmbeddable(
+                        "BTG Pactual",
+                        "IT Security Intern",
+                        "",
+                        LocalDate.parse("2022-01-01"),
+                        LocalDate.parse("2022-04-28")
+                )
+        );
+        certificates.add(
+                new ActivityEmbeddable(
+                       "ML for dummies",
+                       "",
+                       LocalDate.parse("2021-05-03"),
+                       LocalDate.parse("2025-05-03")
+                )
+        );
+        certificates.add(
+                new ActivityEmbeddable(
+                        "DS for dummies",
+                        "",
+                        LocalDate.parse("2021-05-03"),
+                        LocalDate.parse("2025-05-03")
+                )
+        );
+        CurriculumEntity curriculumEntity = this.repository.save(
+                new CurriculumEntity(
+                        "Enzo",
+                        "Neves",
+                        "Engenharia da Computação",
+                        LocalDate.parse("2023-12-30"),
+                        pastExperiences,
+                        certificates
+                )
+        );
+
+        return curriculumEntity;
     }
 }
