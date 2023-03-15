@@ -1,5 +1,5 @@
-query getCurriculumById($input: GetCurriculumByIdInput!){
-    getCurriculumById(input: $input){
+query getCurriculum {
+    getCurriculum {
         id
         name
         lastName

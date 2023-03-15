@@ -8,5 +8,6 @@ import java.util.List;
 
 public interface CurriculumRepository extends CrudRepository<CurriculumEntity, Long> {
     CurriculumEntity findById(long id);
+    CurriculumEntity findByUserId(long userId);
     List<CurriculumEntity> findAll();
 }

@@ -1,5 +1,5 @@
 type Query {
-    getCurriculumById(input: GetCurriculumByIdInput!): Curriculum
+    getCurriculum: Curriculum
     getAllCurricula: [Curriculum]!
 }
 

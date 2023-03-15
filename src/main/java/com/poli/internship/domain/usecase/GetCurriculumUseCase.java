@@ -7,11 +7,11 @@ import org.springframework.stereotype.Service;
 import static com.poli.internship.domain.models.CurriculumModel.Curriculum;
 
 @Service
-public class GetCurriculumByIdUseCase {
+public class GetCurriculumUseCase {
     @Autowired
     private CurriculumDataSource dataSource;
 
-    public Curriculum exec(String id){
-        return this.dataSource.getCurriculumById(id);
+    public Curriculum exec(String userId){
+        return this.dataSource.getCurriculumByUserId(userId);
     }
 }

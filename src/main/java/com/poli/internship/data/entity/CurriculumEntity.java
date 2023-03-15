@@ -14,6 +14,7 @@ public class CurriculumEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+    private Long userId;
     private String name;
     private String lastName;
     private String degreeCourse;
@@ -31,6 +32,7 @@ public class CurriculumEntity {
 
     public CurriculumEntity(
             Long id,
+            Long userId,
             String name,
             String lastName,
             String degreeCourse,
@@ -39,6 +41,7 @@ public class CurriculumEntity {
             Set<ActivityEmbeddable> certificates
     ) {
         this.id = id;
+        this.userId = userId;
         this.name = name;
         this.lastName = lastName;
         this.degreeCourse = degreeCourse;
@@ -47,12 +50,14 @@ public class CurriculumEntity {
         this.certificates = certificates;
     }
 
-    public CurriculumEntity(String name,
+    public CurriculumEntity(Long userId,
+                            String name,
                             String lastName,
                             String degreeCourse,
                             LocalDate graduationYear,
                             Set<ExperienceEmbeddable> pastExperiences,
                             Set<ActivityEmbeddable> certificates) {
+        this.userId = userId;
         this.name = name;
         this.lastName = lastName;
         this.degreeCourse = degreeCourse;
@@ -64,6 +69,8 @@ public class CurriculumEntity {
     public Long getId() {
         return id;
     }
+
+    public Long getUserId() { return userId; }
 
     public String getName() {
         return name;
