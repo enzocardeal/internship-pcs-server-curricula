@@ -1,8 +1,10 @@
 package com.poli.internship.api.controller;
 
+import com.poli.internship.api.auth.GraphQLAuthorization;
 import com.poli.internship.data.embeddable.ActivityEmbeddable;
 import com.poli.internship.data.embeddable.ExperienceEmbeddable;
 import com.poli.internship.domain.usecase.*;
+import graphql.GraphQLContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.MutationMapping;
@@ -24,12 +26,14 @@ public class CurriculumController {
     @Autowired
     public UpdateCurriculumUseCase updateCurriculumUseCase;
     @Autowired
-    public GetCurriculumByIdUseCase getCurriculumByIdUseCase;
+    public GetCurriculumUseCase getCurriculumUseCase;
     @Autowired
     public GetAllCurriculaUseCase getAllCurriculaUseCase;
 
     @MutationMapping
-    public Curriculum createCurriculum(@Argument Map input){
+    public Curriculum createCurriculum(@Argument Map input, GraphQLContext ctx){
+        GraphQLAuthorization.checkAuthorization(ctx);
+
         Map data = (Map)input.get("input");
 
         List<ExperienceEmbeddable> pastExperiences = new ArrayList<ExperienceEmbeddable>();
@@ -39,7 +43,7 @@ public class CurriculumController {
         ((List)data.get("certificates")).forEach((certificate) -> certificates.add(parseActivity((Map)certificate)));
 
         return this.createCurriculumUseCase.exec(
-                new CurriculumInput(
+                new CurriculumInput((String)ctx.get("userId"),
                 (String)data.get("name"),
                 (String)data.get("lastName"),
                 (String)data.get("degreeCourse"),
@@ -51,13 +55,17 @@ public class CurriculumController {
     }
 
     @MutationMapping
-    public Boolean deleteCurriculum(@Argument Map input){
+    public Boolean deleteCurriculum(@Argument Map input, GraphQLContext ctx){
+        GraphQLAuthorization.checkAuthorization(ctx);
+
         Map data = (Map)input.get("input");
         return this.deleteCurriculumUseCase.exec((String)data.get("id"));
     }
 
     @MutationMapping
-    public Curriculum updateCurriculum(@Argument Map input){
+    public Curriculum updateCurriculum(@Argument Map input, GraphQLContext ctx){
+        GraphQLAuthorization.checkAuthorization(ctx);
+
         Map data = (Map)input.get("input");
 
         List<ExperienceEmbeddable> pastExperiences = new ArrayList<ExperienceEmbeddable>();
@@ -70,10 +78,11 @@ public class CurriculumController {
             ((List)data.get("certificates")).forEach((certificate) -> certificates.add(parseActivity((Map)certificate)));
         }
 
-        Curriculum positionToBeUpdated = this.getCurriculumByIdUseCase.exec((String)data.get("id"));
+        Curriculum positionToBeUpdated = this.getCurriculumUseCase.exec(ctx.get("userId"));
 
         return this.updateCurriculumUseCase.exec(
                 new CurriculumInput(
+                        (String)ctx.get("userId"),
                         data.get("name") != null ? (String)data.get("name") : positionToBeUpdated.name(),
                         data.get("lastName") != null ? (String)data.get("lastName") : positionToBeUpdated.lastName(),
                         data.get("degreeCourse") != null ? (String)data.get("degreeCourse") : positionToBeUpdated.degreeCourse(),
@@ -86,16 +95,18 @@ public class CurriculumController {
     }
 
     @QueryMapping
-    public Curriculum getCurriculumById(@Argument Map input){
-        Map data = (Map)input.get("input");
+    public Curriculum getCurriculum(GraphQLContext ctx){
+        GraphQLAuthorization.checkAuthorization(ctx);
 
-        return this.getCurriculumByIdUseCase.exec((String)data.get("id"));
+        return this.getCurriculumUseCase.exec((String)ctx.get("userId"));
     }
 
+    /*
     @QueryMapping
     public List<Curriculum> getAllCurricula(){
         return this.getAllCurriculaUseCase.exec();
     }
+    */
 
     private ExperienceEmbeddable parseExperience(Map data){
         return new ExperienceEmbeddable(

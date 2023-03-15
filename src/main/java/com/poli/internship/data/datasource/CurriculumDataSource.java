@@ -21,6 +21,7 @@ public class CurriculumDataSource {
     public Curriculum createCurriculum(CurriculumInput curriculumInput)
     {
         CurriculumEntity curriculumEntity = repository.save(new CurriculumEntity(
+                Long.parseLong(curriculumInput.userId()),
                 curriculumInput.name(),
                 curriculumInput.lastName(),
                 curriculumInput.degreeCourse(),
@@ -33,6 +34,11 @@ public class CurriculumDataSource {
 
     public Curriculum getCurriculumById(String id){
         CurriculumEntity curriculumEntity = repository.findById(Long.parseLong(id));
+        return CurriculumMapper.INSTANCE.curriculumEntityToModel(curriculumEntity);
+    }
+
+    public Curriculum getCurriculumByUserId(String userId){
+        CurriculumEntity curriculumEntity = repository.findByUserId(Long.parseLong(userId));
         return CurriculumMapper.INSTANCE.curriculumEntityToModel(curriculumEntity);
     }
 
@@ -53,6 +59,7 @@ public class CurriculumDataSource {
         CurriculumEntity curriculumEntity = repository.save(
                 new CurriculumEntity(
                         id,
+                        Long.parseLong(curriculumInput.userId()),
                         curriculumInput.name(),
                         curriculumInput.lastName(),
                         curriculumInput.degreeCourse(),

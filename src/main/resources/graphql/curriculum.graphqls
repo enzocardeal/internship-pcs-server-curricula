@@ -62,7 +62,3 @@ input UpdateCurriculumInput{
     pastExperiences: [ExperienceInput]
     certificates: [ActivityInput]
 }
-
-input GetCurriculumByIdInput{
-    id: String!
-}

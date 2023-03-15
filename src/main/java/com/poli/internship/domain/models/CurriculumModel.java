@@ -9,6 +9,7 @@ import java.util.Set;
 public class CurriculumModel {
     public static record Curriculum(
             String id,
+            String userId,
             String name,
             String lastName,
             String degreeCourse,
@@ -17,6 +18,7 @@ public class CurriculumModel {
             Set<ActivityEmbeddable> certificates
     ){};
     public static record CurriculumInput(
+            String userId,
             String name,
             String lastName,
             String degreeCourse,
