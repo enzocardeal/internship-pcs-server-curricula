@@ -101,10 +101,12 @@ public class CurriculumController {
         return this.getCurriculumUseCase.exec((String)ctx.get("userId"));
     }
 
+    /*
     @QueryMapping
     public List<Curriculum> getAllCurricula(){
         return this.getAllCurriculaUseCase.exec();
     }
+    */
 
     private ExperienceEmbeddable parseExperience(Map data){
         return new ExperienceEmbeddable(
