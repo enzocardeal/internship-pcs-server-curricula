@@ -61,14 +61,13 @@ public class CurriculumController {
     }
 
     @MutationMapping
-    public Boolean deleteCurriculum(@Argument Map input, GraphQLContext ctx){
+    public Boolean deleteCurriculum(GraphQLContext ctx){
         GraphQLAuthorization.checkAuthorization(ctx);
         if(UserType.valueOf(ctx.get("userType")) != UserType.STUDENT) {
             throw new CustomError("Wrong user type.", ErrorType.FORBIDDEN);
         }
 
-        Map data = (Map)input.get("input");
-        return this.deleteCurriculumUseCase.exec((String)data.get("id"));
+        return this.deleteCurriculumUseCase.exec(ctx.get("userId"));
     }
 
     @MutationMapping
@@ -101,9 +100,7 @@ public class CurriculumController {
                         data.get("graduationYear") != null ? (LocalDate)data.get("graduationYear") : positionToBeUpdated.graduationYear(),
                         data.get("pastExperiences") != null ? new HashSet<ExperienceEmbeddable>(pastExperiences) : positionToBeUpdated.pastExperiences(),
                         data.get("certificates") != null ? new HashSet<ActivityEmbeddable>(certificates) : positionToBeUpdated.certificates()
-                ),
-                (String)data.get("id")
-        );
+                ));
     }
 
     @QueryMapping
