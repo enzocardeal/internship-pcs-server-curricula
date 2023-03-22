@@ -6,6 +6,7 @@ import com.poli.internship.data.embeddable.ExperienceEmbeddable;
 import com.poli.internship.data.entity.CurriculumEntity;
 import com.poli.internship.data.repository.CurriculumRepository;
 import com.poli.internship.domain.models.AuthTokenPayloadModel;
+import com.poli.internship.domain.models.UserType;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
@@ -45,6 +46,7 @@ public class CurriculumTest {
         tokenPayload = new AuthTokenPayloadModel.AuthTokenPayload(
                 "123",
                 "enzo@teste.com",
+                UserType.STUDENT,
                 3600);
         authToken = this.jwtService.createAuthorizationToken(tokenPayload);
         testerWithAuth = this.tester.mutate().header("Authorization", authToken).build();

@@ -1,15 +1,7 @@
 package com.poli.internship.api.context;
 
-import com.auth0.jwt.JWT;
-import com.auth0.jwt.JWTVerifier;
-import com.auth0.jwt.algorithms.Algorithm;
-import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.poli.internship.api.error.CustomError;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.graphql.execution.ErrorType;
 import org.springframework.graphql.server.WebGraphQlInterceptor;
 import org.springframework.graphql.server.WebGraphQlRequest;
 import org.springframework.graphql.server.WebGraphQlResponse;
@@ -36,6 +28,7 @@ public class RequestHeaderInterceptor implements WebGraphQlInterceptor {
         if (decodedToken != null) {
             context.put("userId", decodedToken.getClaim("userId").asString());
             context.put("email", decodedToken.getClaim("email").asString());
+            context.put("userType", decodedToken.getClaim("userType").asString());
         }
 
         request.configureExecutionInput(((executionInput, builder) ->
