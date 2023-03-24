@@ -1,5 +1,5 @@
-query getAllCurricula{
-    getAllCurricula {
+query getCurriculumForCompany($input: GetCurriculumForCompanyInput!){
+    getCurriculumForCompany(input: $input) {
         id
         name
         lastName

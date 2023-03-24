@@ -1,6 +1,6 @@
 type Query {
     getCurriculum: Curriculum
-    getAllCurricula: [Curriculum]!
+    getCurriculumForCompany(input: GetCurriculumForCompanyInput!): Curriculum
 }
 
 type Mutation {
