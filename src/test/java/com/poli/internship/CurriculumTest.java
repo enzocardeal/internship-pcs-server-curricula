@@ -3,7 +3,9 @@ package com.poli.internship;
 import com.poli.internship.api.context.JWTService;
 import com.poli.internship.data.embeddable.ActivityEmbeddable;
 import com.poli.internship.data.embeddable.ExperienceEmbeddable;
+import com.poli.internship.data.entity.CurriculumAuthorizationEntity;
 import com.poli.internship.data.entity.CurriculumEntity;
+import com.poli.internship.data.repository.CurriculumAuthorizationRepository;
 import com.poli.internship.data.repository.CurriculumRepository;
 import com.poli.internship.domain.models.AuthTokenPayloadModel;
 import com.poli.internship.domain.models.UserType;
@@ -36,6 +38,8 @@ public class CurriculumTest {
     private CurriculumRepository repository;
     @Autowired
     private JWTService jwtService;
+    @Autowired
+    private CurriculumAuthorizationRepository curriculumAuthorizationRepository;
 
     HttpGraphQlTester testerWithAuth;
     AuthTokenPayloadModel.AuthTokenPayload tokenPayload;
@@ -148,20 +152,32 @@ public class CurriculumTest {
     }
 
     @Test
-    @Disabled
     @Transactional
-    public void getAllCurricula(){
+    public void getCurriculumForCompany(){
         CurriculumEntity curriculumEntity = createElementsOnDb();
-        String id = curriculumEntity.getId().toString();
-        Map<String, Object> input = new HashMap<String, Object>();
+        String studentId = curriculumEntity.getUserId().toString();
 
-        List<HashMap> curricula = testerWithAuth.documentName("getAllCurricula")
+        tokenPayload = new AuthTokenPayloadModel.AuthTokenPayload(
+                "456",
+                "empresa@teste.com",
+                UserType.COMPANY,
+                3600);
+        authToken = this.jwtService.createAuthorizationToken(tokenPayload);
+        testerWithAuth = this.tester.mutate().header("Authorization", authToken).build();
+
+        this.curriculumAuthorizationRepository.save(new CurriculumAuthorizationEntity(456l, 123l));
+
+        Map<String, Object> input = new HashMap<String, Object>();
+        input.put("studentId", studentId);
+
+        Curriculum curriculum = testerWithAuth.documentName("getCurriculumForCompany")
+                .variable("input", input)
                 .execute()
-                .path("getAllCurricula")
-                .entity(List.class)
+                .path("getCurriculumForCompany")
+                .entity(Curriculum.class)
                 .get();
 
-        assertThat((String)curricula.get(0).get("id")).isEqualTo(id);
+        assertThat(curriculum.id()).isEqualTo(curriculum.id());
     }
 
     private CurriculumEntity createElementsOnDb(){

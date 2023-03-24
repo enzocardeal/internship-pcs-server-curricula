@@ -57,3 +57,7 @@ input UpdateCurriculumInput{
     pastExperiences: [ExperienceInput]
     certificates: [ActivityInput]
 }
+
+input GetCurriculumForCompanyInput{
+    studentId: String
+}

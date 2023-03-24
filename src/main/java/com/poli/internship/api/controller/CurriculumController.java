@@ -31,7 +31,7 @@ public class CurriculumController {
     @Autowired
     public GetCurriculumUseCase getCurriculumUseCase;
     @Autowired
-    public GetAllCurriculaUseCase getAllCurriculaUseCase;
+    public GetCurriculumForCompanyUseCase getCurriculumForCompanyUseCase;
 
     @MutationMapping
     public Curriculum createCurriculum(@Argument Map input, GraphQLContext ctx){
@@ -113,12 +113,19 @@ public class CurriculumController {
         return this.getCurriculumUseCase.exec((String)ctx.get("userId"));
     }
 
-    /*
+
     @QueryMapping
-    public List<Curriculum> getAllCurricula(){
-        return this.getAllCurriculaUseCase.exec();
+    public Curriculum getCurriculumForCompany(@Argument Map input, GraphQLContext ctx){
+        GraphQLAuthorization.checkAuthorization(ctx);
+        if(UserType.valueOf(ctx.get("userType")) != UserType.COMPANY) {
+            throw new CustomError("Wrong user type.", ErrorType.FORBIDDEN);
+        }
+        Map data = (Map)input.get("input");
+        String companyId = ctx.get("userId");
+        String studentId = (String) data.get("studentId");
+        return this.getCurriculumForCompanyUseCase.exec(companyId, studentId);
     }
-    */
+
 
     private ExperienceEmbeddable parseExperience(Map data){
         return new ExperienceEmbeddable(
