@@ -3,7 +3,7 @@ package com.poli.internship.data.messaging;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.cloud.spring.pubsub.support.BasicAcknowledgeablePubsubMessage;
 import com.google.cloud.spring.pubsub.support.GcpPubSubHeaders;
-import com.poli.internship.api.error.CustomError;
+import static com.poli.internship.InternshipApplication.LOGGER;
 import com.poli.internship.data.entity.CurriculumAuthorizationEntity;
 import com.poli.internship.data.repository.CurriculumAuthorizationRepository;
 import com.poli.internship.domain.models.CurriculumAuthorizationActionType;
@@ -47,7 +47,7 @@ public class MessageHandlers {
                 }
 
             } catch (Exception e) {
-                // Log exception when we have a logger
+                LOGGER.error(e.getMessage(), e);
             }
 
 

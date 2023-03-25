@@ -20,6 +20,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
+
+import static com.poli.internship.InternshipApplication.LOGGER;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.concurrent.TimeUnit;
@@ -61,8 +63,7 @@ public class CurriculumAuthorizationTest {
                             .build();
 
         } catch (Exception e) {
-            System.out.println(e);
-            System.out.println("Failed to setup pub sub test environment.");
+            LOGGER.error(e.getMessage(), e);
         }
 
     }
@@ -82,7 +83,7 @@ public class CurriculumAuthorizationTest {
         try {
             topicClient.awaitTermination(1, TimeUnit.SECONDS);
         } catch (Exception e) {
-            System.out.println(e);
+            LOGGER.error(e.getMessage(), e);
         }
 
         CurriculumAuthorizationEntity curriculumAuth = curriculumAuthorizationRepository.findByCompanyIdAndStudentId(456, 123);
@@ -101,7 +102,7 @@ public class CurriculumAuthorizationTest {
         try {
             topicClient.awaitTermination(1, TimeUnit.SECONDS);
         } catch (Exception e) {
-            System.out.println(e);
+            LOGGER.error(e.getMessage(), e);
         }
 
         CurriculumAuthorizationEntity curriculumAuth = curriculumAuthorizationRepository.findByCompanyIdAndStudentId(456, 123);
