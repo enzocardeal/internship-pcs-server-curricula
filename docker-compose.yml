@@ -62,7 +62,7 @@ services:
       - PUBSUB_PROJECT1=PROJECT_TEST_ID,curriculum-authorization:curriculum-authorization-sub
     expose:
       - 8681
-    profiles: ["default", "test"]
+    profiles: ["test"]
 
 networks:
   app-network:
