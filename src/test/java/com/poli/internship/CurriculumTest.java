@@ -6,6 +6,7 @@ import com.poli.internship.data.embeddable.ExperienceEmbeddable;
 import com.poli.internship.data.entity.CurriculumEntity;
 import com.poli.internship.data.repository.CurriculumRepository;
 import com.poli.internship.domain.models.AuthTokenPayloadModel;
+import com.poli.internship.domain.models.UserType;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
@@ -45,6 +46,7 @@ public class CurriculumTest {
         tokenPayload = new AuthTokenPayloadModel.AuthTokenPayload(
                 "123",
                 "enzo@teste.com",
+                UserType.STUDENT,
                 3600);
         authToken = this.jwtService.createAuthorizationToken(tokenPayload);
         testerWithAuth = this.tester.mutate().header("Authorization", authToken).build();
@@ -116,13 +118,9 @@ public class CurriculumTest {
     @Test
     @Transactional
     public void deleteCurriculum(){
-        String id = createElementsOnDb().getId().toString();
-
-        Map<String, Object> input = new HashMap<String, Object>();
-        input.put("id", id);
+        createElementsOnDb();
 
         Boolean deleted = testerWithAuth.documentName("deleteCurriculum")
-                .variable("input", input)
                 .execute()
                 .path("deleteCurriculum")
                 .entity(Boolean.class)
@@ -135,9 +133,7 @@ public class CurriculumTest {
     @Transactional
     public void updateCurriculum(){
         CurriculumEntity curriculumEntity = createElementsOnDb();
-        String id = curriculumEntity.getId().toString();
         Map<String, Object> input = new HashMap<String, Object>();
-        input.put("id", id);
         input.put("graduationYear", LocalDate.parse("2024-12-30"));
 
         Curriculum curriculum = testerWithAuth.documentName("updateCurriculum")

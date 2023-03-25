@@ -1,14 +1,17 @@
 package com.poli.internship.api.controller;
 
 import com.poli.internship.api.auth.GraphQLAuthorization;
+import com.poli.internship.api.error.CustomError;
 import com.poli.internship.data.embeddable.ActivityEmbeddable;
 import com.poli.internship.data.embeddable.ExperienceEmbeddable;
+import com.poli.internship.domain.models.UserType;
 import com.poli.internship.domain.usecase.*;
 import graphql.GraphQLContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.MutationMapping;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
+import org.springframework.graphql.execution.ErrorType;
 import org.springframework.stereotype.Controller;
 
 import static com.poli.internship.domain.models.CurriculumModel.Curriculum;
@@ -33,6 +36,9 @@ public class CurriculumController {
     @MutationMapping
     public Curriculum createCurriculum(@Argument Map input, GraphQLContext ctx){
         GraphQLAuthorization.checkAuthorization(ctx);
+        if(UserType.valueOf(ctx.get("userType")) != UserType.STUDENT) {
+            throw new CustomError("Wrong user type.", ErrorType.FORBIDDEN);
+        }
 
         Map data = (Map)input.get("input");
 
@@ -55,16 +61,21 @@ public class CurriculumController {
     }
 
     @MutationMapping
-    public Boolean deleteCurriculum(@Argument Map input, GraphQLContext ctx){
+    public Boolean deleteCurriculum(GraphQLContext ctx){
         GraphQLAuthorization.checkAuthorization(ctx);
+        if(UserType.valueOf(ctx.get("userType")) != UserType.STUDENT) {
+            throw new CustomError("Wrong user type.", ErrorType.FORBIDDEN);
+        }
 
-        Map data = (Map)input.get("input");
-        return this.deleteCurriculumUseCase.exec((String)data.get("id"));
+        return this.deleteCurriculumUseCase.exec(ctx.get("userId"));
     }
 
     @MutationMapping
     public Curriculum updateCurriculum(@Argument Map input, GraphQLContext ctx){
         GraphQLAuthorization.checkAuthorization(ctx);
+        if(UserType.valueOf(ctx.get("userType")) != UserType.STUDENT) {
+            throw new CustomError("Wrong user type.", ErrorType.FORBIDDEN);
+        }
 
         Map data = (Map)input.get("input");
 
@@ -89,14 +100,15 @@ public class CurriculumController {
                         data.get("graduationYear") != null ? (LocalDate)data.get("graduationYear") : positionToBeUpdated.graduationYear(),
                         data.get("pastExperiences") != null ? new HashSet<ExperienceEmbeddable>(pastExperiences) : positionToBeUpdated.pastExperiences(),
                         data.get("certificates") != null ? new HashSet<ActivityEmbeddable>(certificates) : positionToBeUpdated.certificates()
-                ),
-                (String)data.get("id")
-        );
+                ));
     }
 
     @QueryMapping
     public Curriculum getCurriculum(GraphQLContext ctx){
         GraphQLAuthorization.checkAuthorization(ctx);
+        if(UserType.valueOf(ctx.get("userType")) != UserType.STUDENT) {
+            throw new CustomError("Wrong user type.", ErrorType.FORBIDDEN);
+        }
 
         return this.getCurriculumUseCase.exec((String)ctx.get("userId"));
     }
