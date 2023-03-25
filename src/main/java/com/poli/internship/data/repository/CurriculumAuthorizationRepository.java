@@ -5,4 +5,5 @@ import org.springframework.data.repository.CrudRepository;
 
 public interface CurriculumAuthorizationRepository extends CrudRepository<CurriculumAuthorizationEntity, Long> {
     CurriculumAuthorizationEntity findByCompanyIdAndStudentId(long companyId, long studentId);
+    boolean existsByCompanyIdAndStudentId(long companyId, long studentId);
 }

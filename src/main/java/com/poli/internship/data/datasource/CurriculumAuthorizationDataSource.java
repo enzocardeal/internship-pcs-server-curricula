@@ -11,12 +11,9 @@ public class CurriculumAuthorizationDataSource {
     private CurriculumAuthorizationRepository curriculumAuthorizationRepository;
 
     public boolean isCompanyAuthorizedToViewCurriculum(String companyId, String studentId) {
-        CurriculumAuthorizationEntity curriculumAuthorizationEntity =
-                this.curriculumAuthorizationRepository.findByCompanyIdAndStudentId(
+        return this.curriculumAuthorizationRepository.existsByCompanyIdAndStudentId(
                         Long.parseLong(companyId),
                         Long.parseLong(studentId)
                 );
-
-        return curriculumAuthorizationEntity != null;
     }
 }
