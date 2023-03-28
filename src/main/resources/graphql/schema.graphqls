@@ -1,10 +1,10 @@
 type Query {
     getCurriculum: Curriculum
-    getAllCurricula: [Curriculum]!
+    getCurriculumForCompany(input: GetCurriculumForCompanyInput!): Curriculum
 }
 
 type Mutation {
     createCurriculum(input: CreateCurriculumInput!): Curriculum
-    deleteCurriculum(input: DeleteCurriculumInput!): Boolean
+    deleteCurriculum: Boolean
     updateCurriculum(input: UpdateCurriculumInput!): Curriculum
 }

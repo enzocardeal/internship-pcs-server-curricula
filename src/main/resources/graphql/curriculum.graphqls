@@ -49,16 +49,15 @@ input CreateCurriculumInput{
     certificates: [ActivityInput]!
 }
 
-input DeleteCurriculumInput{
-    id: String!
-}
-
 input UpdateCurriculumInput{
-    id: String!
     name: String
     lastName: String
     degreeCourse: String
     graduationYear: Date
     pastExperiences: [ExperienceInput]
     certificates: [ActivityInput]
+}
+
+input GetCurriculumForCompanyInput{
+    studentId: String
 }
